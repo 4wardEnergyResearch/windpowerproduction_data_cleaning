@@ -15,5 +15,5 @@ reads in and cleans example data
 
 # acknowledgements
 The project was developed within the project ["AI4WIND"](https://www.4wardenergy.at/de/referenzen/ai4wind) funded by Programm „IKT der Zukunft/AI for Green“ – eine Initiative des Bundesministeriums für Klimaschutz, Umwelt, Energie, Mobilität, Innovation und Technologie (BMK)
-<a href="https://www.why-h2020.eu/"><img src="https://www.4wardenergy.at/fileadmin/_processed_/e/e/csm_Foerdergeber_0b414cdcf9.png" width="200px" style="float:right"></a>
-<a href="https://www.why-h2020.eu/"><img src="https://www.4wardenergy.at/fileadmin/_processed_/b/9/csm_FFG_Logo_DE_RGB_1500px_6746e7b63c.png" width="200px" style="float:right"></a>
+<img src="https://www.4wardenergy.at/fileadmin/_processed_/e/e/csm_Foerdergeber_0b414cdcf9.png" width="200px" style="float:right"></a>
+<img src="https://www.4wardenergy.at/fileadmin/_processed_/b/9/csm_FFG_Logo_DE_RGB_1500px_6746e7b63c.png" width="200px" style="float:right"></a>
