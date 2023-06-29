@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-def compute_flag_quantiles(data: pd.DataFrame, ws_cut_in: float, ws_rated: float, ws_cut_out: float, nominal_power: float, plot: bool):
+def compute_flag_quantiles(data: pd.DataFrame, ws_cut_in: float, ws_rated: float, ws_cut_out: float, nominal_power: float, threshold: float, stepsize: float, plot: bool):
     """Flag wind turbine data based on quantiles.
 
     Here quantiles are used to flag data. To find the suitable quantile, many are computed and followed (starting with the lowest) as long as their
     derivation is positive. When the quantile oscillates down (negative derivation), the next higher quantile is chosen (from lower wind speeds to higher wind speeds).
+
 
     The code is inspired by:
     https://ayrtonb.github.io/Merit-Order-Effect/ug-03-power-curve/
@@ -25,6 +26,10 @@ def compute_flag_quantiles(data: pd.DataFrame, ws_cut_in: float, ws_rated: float
         Cut-out wind speed in m/s.
     nominal_power : float
         Nominal power of the wind turbine
+    threshold : float
+        Threshold value for maxmimal allowed derivative
+    stepsize : float
+        interval size, where quantiles are evaluated. The more datapoints are given, the greater the step size should be
     plot: bool
         If True the choice of quantiles is plot.
 
@@ -50,12 +55,15 @@ def compute_flag_quantiles(data: pd.DataFrame, ws_cut_in: float, ws_rated: float
     # Power
     data.loc[((data["power [kW]"] / nominal_power <= -0.05) | (data["power [kW]"] / nominal_power > 1.05)), "Flag Computed"] = 1
 
+    # Power at zero wind speed
+    data.loc[((data["power [kW]"] > 0) & (data["windspeed [m/s]"] == 0 )), "Flag Computed"] = 1
+
     # extract only unflagged data
     group_data = data[data["Flag Computed"] == 0]
 
     # FLAGGING BASED ON QUANTILES ONLY
     # create wind speed vector with step size 0.1 until rated wind speed and 1 between rated wind speed and cut-out wind speed
-    vtest = list(np.arange(-0.05, ws_rated + 0.05, 0.1)) + list(np.arange(ws_rated + 0.15, ws_cut_out + 0.5, 0.5))
+    vtest = list(np.arange(-stepsize / 2, ws_rated + stepsize / 2, stepsize)) + list(np.arange(ws_rated + 0.15, ws_cut_out + 0.5, 0.5))
     # group data according to constructed vector
     grouped = group_data.groupby(pd.cut(group_data["windspeed [m/s]"], vtest))
 
@@ -76,7 +84,7 @@ def compute_flag_quantiles(data: pd.DataFrame, ws_cut_in: float, ws_rated: float
     # introduce new column, where the value of the chosen quantile is saved for each windspeed interval
     df_quantiles["mask"] = -0.05 * nominal_power
 
-    # loop over quantiles and find index where derivative is lower than -1
+    # loop over quantiles and find index where derivative is lower than given threshold
     for column in df_quantiles.columns:
         # numerical derivative
         quantile_test = df_quantiles[column].diff()
@@ -87,7 +95,7 @@ def compute_flag_quantiles(data: pd.DataFrame, ws_cut_in: float, ws_rated: float
             break
         # look at derivative after index, where limit is already determined
         quantile_test = quantile_test[df_quantiles.index >= relevant]
-        quantile_test = quantile_test <= -1
+        quantile_test = quantile_test <= threshold
 
         # save the relevant quantile value to columns ["mask"]
         if sum(quantile_test) >= 1:
@@ -164,6 +172,9 @@ def compute_flag_goretti(data: pd.DataFrame, ws_cut_in: float, ws_rated: float, 
 
     # Power
     data.loc[((data["power [kW]"] / nominal_power <= -0.05) | (data["power [kW]"] / nominal_power > 1.05)), "Flag Computed"] = 1
+
+    # Power at zero wind speed
+    data.loc[((data["power [kW]"] > 0) & (data["windspeed [m/s]"] == 0 )), "Flag Computed"] = 1
 
     # - - - Bivariate extreme values - - -
     # 1. Flag instances of high power output for wind speed in [0, ws_cut_in - 0.5] with 2
