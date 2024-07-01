@@ -157,6 +157,7 @@ pip install -r requirements.txt
 #### 4. Verify installation
 To verify that the installation was successful, you can run the `example.py` script:
 ```bash
+cd src
 python example.py
 ```
 If there are no errors and the program runs through, your installation is complete.

@@ -113,15 +113,15 @@ def prepare_timeseries_data(data: pd.DataFrame) -> pd.DataFrame:
     timeseries_data["timestamp"] = data[data.columns.intersection(timestamp_categories)]
     timeseries_data["windspeed [m/s]"] = data[data.columns.intersection(windspeed_categories)]
     if data.columns.intersection(temperature_categories).empty:
-        timeseries_data["temperature [C]"] = np.NAN
+        timeseries_data["temperature [C]"] = np.nan
     else:
         timeseries_data["temperature [C]"] = data[data.columns.intersection(temperature_categories)]
     if data.columns.intersection(winddirection_categories).empty:
-        timeseries_data["wind direction [deg]"] = np.NAN
+        timeseries_data["wind direction [deg]"] = np.nan
     else:
         timeseries_data["wind direction [deg]"] = data[data.columns.intersection(winddirection_categories)]
     if data.columns.intersection(gondelposition_categories).empty:
-        timeseries_data["gondel position [deg]"] = np.NAN
+        timeseries_data["gondel position [deg]"] = np.nan
     else:
         timeseries_data["gondel position [deg]"] = data[data.columns.intersection(gondelposition_categories)]
     timeseries_data.index = pd.to_datetime(timeseries_data["timestamp"], format="ISO8601")

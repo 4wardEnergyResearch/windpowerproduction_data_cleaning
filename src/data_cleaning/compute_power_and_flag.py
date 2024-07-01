@@ -737,7 +737,7 @@ def compute_power_and_flag(filepath: str, dc_config: pd.DataFrame, plotting: boo
     turbine_id, turbine, turbine_spec = initialize_turbine(filepath=filepath)
 
     if turbine is None or turbine_spec is None:
-        return (turbine_id, np.NAN, np.NAN, np.NAN, np.NAN)
+        return (turbine_id, np.nan, np.nan, np.nan, np.nan)
     # method to calculate power output
     power_computed = wpl.power_output.power_curve(wind_speed=data["windspeed [m/s]"], power_curve_wind_speeds=turbine.power_curve["wind_speed"],
                                                   power_curve_values=turbine.power_curve["value"])
@@ -816,9 +816,6 @@ def main(plotting: bool = False):
     # This is used to pass the config to the process_file function
     config_gen = (dc_config for f in input_files_list)
     plotting_gen = (plotting for f in input_files_list)
-
-    # XXX
-    # process_file(input_files_list[0], FolderPaths.flagged_dir, dc_config, plotting)
 
     # Create a ProcessPoolExecutor for concurrent execution
     print_green(f"Flagging in a pool of {ParallelProcessing.num_conc_proc} processes")

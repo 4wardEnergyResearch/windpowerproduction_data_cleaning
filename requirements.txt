@@ -1,5 +1,4 @@
 pandas
-sqlite3
 numpy
 matplotlib
 windpowerlib
