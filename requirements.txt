@@ -1,0 +1,8 @@
+pandas
+sqlite3
+numpy
+matplotlib
+windpowerlib
+plotly
+scipy
+openpyxl
